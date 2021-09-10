@@ -18,10 +18,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Uber Clone',
       initialRoute: 'home',
-      routes: {
-        'home': (BuildContext context) => HomePage()
-      },
+      theme: ThemeData(fontFamily: 'NimbusSans'),
+      debugShowCheckedModeBanner: false,
+      routes: {'home': (BuildContext context) => HomePage()},
     );
   }
 }
-
