@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:uber_clone/utils/custom_colors.dart';
+import 'package:uber_clone/src/utils/custom_colors.dart';
+import 'package:uber_clone/src/widgets/custom_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -41,16 +42,10 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _loginButton() {
     return Container(
-      width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: 30, vertical: 25),
-      child: ElevatedButton(
-        onPressed: () {},
-        child: Text('Iniciar sesión'),
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
-            CustomColors.uberCloneColor,
-          ),
-        ),
+      child: CustomButton(
+        btnColor: CustomColors.uberCloneColor,
+        text: 'Iniciar sesión',
       ),
     );
   }
