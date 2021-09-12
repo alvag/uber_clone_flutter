@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uber_clone/pages/home/home_page.dart';
+import 'package:uber_clone/pages/login/login_page.dart';
+import 'package:uber_clone/utils/custom_colors.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,9 +20,16 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Uber Clone',
       initialRoute: 'home',
-      theme: ThemeData(fontFamily: 'NimbusSans'),
+      theme: ThemeData(
+        fontFamily: 'NimbusSans',
+        appBarTheme: AppBarTheme(elevation: 0),
+        primaryColor: CustomColors.uberCloneColor,
+      ),
       debugShowCheckedModeBanner: false,
-      routes: {'home': (BuildContext context) => HomePage()},
+      routes: {
+        'home': (BuildContext context) => HomePage(),
+        'login': (BuildContext context) => LoginPage()
+      },
     );
   }
 }
