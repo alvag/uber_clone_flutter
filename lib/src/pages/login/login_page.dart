@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:uber_clone/src/pages/login/login_controller.dart';
 import 'package:uber_clone/src/utils/custom_colors.dart';
 import 'package:uber_clone/src/widgets/custom_button.dart';
 
@@ -11,21 +13,35 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  LoginController _loginController = new LoginController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+      _loginController.init(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        children: [
-          _bannerApp(),
-          _textDescription(),
-          _textLogin(),
-          Expanded(child: Container()),
-          _textFieldEmail(),
-          _textFieldPassword(),
-          _loginButton(),
-          _textDontHaveAccount(),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _bannerApp(),
+            _textDescription(),
+            _textLogin(),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.17),
+            _textFieldEmail(),
+            _textFieldPassword(),
+            _loginButton(),
+            _textDontHaveAccount(),
+          ],
+        ),
       ),
     );
   }
@@ -44,6 +60,7 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 30, vertical: 25),
       child: CustomButton(
+        onPressed: _loginController.login,
         btnColor: CustomColors.uberCloneColor,
         text: 'Iniciar sesión',
       ),
@@ -54,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 30),
       child: TextField(
+        controller: _loginController.emailController,
         decoration: InputDecoration(
           hintText: 'correo@gmail.com',
           labelText: 'Correo electrónico',
@@ -70,6 +88,7 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
       child: TextField(
+        controller: _loginController.pwdController,
         obscureText: true,
         decoration: InputDecoration(
           labelText: 'Contraseña',

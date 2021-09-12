@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:uber_clone/src/utils/custom_colors.dart';
 
 class CustomButton extends StatelessWidget {
-  final Color btnColor;
+  Color btnColor;
   final Color textColor;
   final String text;
   final IconData icon;
+  final Function onPressed;
 
   CustomButton({
     this.btnColor = CustomColors.uberCloneColor,
     required this.text,
     this.textColor = Colors.white,
     this.icon = Icons.arrow_forward_ios,
+    required this.onPressed,
   });
 
   @override
@@ -25,7 +27,7 @@ class CustomButton extends StatelessWidget {
     );
 
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () => onPressed(),
       child: Stack(
         children: [
           Align(
