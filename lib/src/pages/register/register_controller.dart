@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:uber_clone/src/models/client.dart';
 import 'package:uber_clone/src/providers/auth_provider.dart';
 import 'package:uber_clone/src/providers/client_provider.dart';
+import 'package:uber_clone/src/utils/custom_progress_dialog.dart';
 import 'package:uber_clone/src/utils/custom_snackbar.dart';
 
 class RegisterController {
@@ -10,6 +12,7 @@ class RegisterController {
 
   late AuthProvider _authProvider;
   late ClientProvider _clientProvider;
+  late ProgressDialog _progressDialog;
 
   TextEditingController emailController = new TextEditingController();
   TextEditingController usernameController = new TextEditingController();
@@ -20,6 +23,7 @@ class RegisterController {
     this.context = context;
     _authProvider = new AuthProvider();
     _clientProvider = new ClientProvider();
+    _progressDialog = CustomProgressDialog.createProgressDialog(context, 'Espere un momento...');
   }
 
   void register() async {
@@ -38,6 +42,8 @@ class RegisterController {
       return;
     }
 
+    _progressDialog.show();
+
     try {
       await _authProvider.register(email, password);
       Client client = new Client(
@@ -47,8 +53,14 @@ class RegisterController {
         password: password,
       );
       await _clientProvider.create(client);
+      _progressDialog.hide();
+      this.emailController.clear();
+      this.usernameController.clear();
+      this.pwdController.clear();
+      this.pwdConfirmController.clear();
       CustomSnackBar.show(context, key, 'Usuario registrado');
     } catch (error) {
+      _progressDialog.hide();
       CustomSnackBar.show(context, key, 'Error: $error');
     }
   }
