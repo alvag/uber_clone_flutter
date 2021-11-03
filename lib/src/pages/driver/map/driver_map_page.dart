@@ -20,7 +20,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
     super.initState();
 
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      _driverMapController.init(context);
+      _driverMapController.init(context, this._refresh);
     });
   }
 
@@ -87,10 +87,10 @@ class _DriverMapPageState extends State<DriverMapPage> {
       margin: EdgeInsets.symmetric(horizontal: 60, vertical: 30),
       alignment: Alignment.bottomCenter,
       child: CustomButton(
-        text: 'CONECTARSE',
+        text: _driverMapController.isConnected ? 'DESCONECTARSE' : 'CONECTARSE',
         textColor: Colors.black,
-        btnColor: Colors.amber,
-        onPressed: () {},
+        btnColor: _driverMapController.isConnected ? Colors.grey[300] : Colors.amber,
+        onPressed: _driverMapController.connect,
       ),
     );
   }
@@ -100,8 +100,13 @@ class _DriverMapPageState extends State<DriverMapPage> {
       initialCameraPosition: _driverMapController.initialPosition,
       mapType: MapType.normal,
       onMapCreated: _driverMapController.onMapCreated,
-      myLocationEnabled: true,
-      myLocationButtonEnabled: true,
+      myLocationEnabled: false,
+      myLocationButtonEnabled: false,
+      markers: Set<Marker>.of(_driverMapController.markers.values),
     );
+  }
+
+  void _refresh() {
+    setState(() {});
   }
 }
