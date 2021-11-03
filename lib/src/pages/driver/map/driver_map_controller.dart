@@ -38,6 +38,8 @@ class DriverMapController {
 
   Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
 
+  late StreamSubscription<DocumentSnapshot<Object?>> _statusSubscription;
+
   Future? init(BuildContext context, Function refresh) async {
     this.context = context;
     this._refresh = refresh;
@@ -46,6 +48,11 @@ class DriverMapController {
     _progressDialog = CustomProgressDialog.createProgressDialog(context, 'Conectandose...');
     _markerDriver = await createMarkerImageFromAsset('assets/img/taxi_icon.png');
     checkGPS();
+  }
+
+  void dispose() {
+    _positionStream.cancel();
+    _statusSubscription.cancel();
   }
 
   void onMapCreated(GoogleMapController controller) {
@@ -92,7 +99,7 @@ class DriverMapController {
   void checkIfIsConnect() {
     Stream<DocumentSnapshot> status = _geofireProvider.getLocationByIdStream(_authProvider.getUser()!.uid);
 
-    status.listen((DocumentSnapshot document) {
+    _statusSubscription = status.listen((DocumentSnapshot document) {
       isConnected = document.exists;
 
       _refresh();
