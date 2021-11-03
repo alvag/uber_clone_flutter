@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 import 'home_controller.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final HomeController _homeController = new HomeController();
 
   @override
-  Widget build(BuildContext context) {
-    this._homeController.init(context);
+  void initState() {
+    // TODO: implement initState
+    super.initState();
 
+    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
+      this._homeController.init(context);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -35,11 +49,11 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 30),
-              _avatarTypeUser('assets/img/pasajero.png', context),
+              _avatarTypeUser('assets/img/pasajero.png', context, 'client'),
               SizedBox(height: 10),
               _textTypeUser('Cliente'),
               SizedBox(height: 30),
-              _avatarTypeUser('assets/img/driver.png', context),
+              _avatarTypeUser('assets/img/driver.png', context, 'driver'),
               SizedBox(height: 10),
               _textTypeUser('Conductor')
             ],
@@ -77,9 +91,9 @@ class HomePage extends StatelessWidget {
     return Text(typeUser, style: TextStyle(color: Colors.white, fontSize: 16));
   }
 
-  Widget _avatarTypeUser(String imagePath, BuildContext context) {
+  Widget _avatarTypeUser(String imagePath, BuildContext context, String userType) {
     return GestureDetector(
-      onTap: _homeController.goToLoginPage,
+      onTap: () => _homeController.goToLoginPage(userType),
       child: CircleAvatar(
         backgroundImage: AssetImage(imagePath),
         radius: 50,

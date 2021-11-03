@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
-import 'package:uber_clone/src/pages/register/register_controller.dart';
+import 'package:uber_clone/src/pages/driver/register/driver_register_controller.dart';
 import 'package:uber_clone/src/utils/custom_colors.dart';
+import 'package:uber_clone/src/utils/otp_widget.dart';
 import 'package:uber_clone/src/widgets/custom_button.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class DriverRegisterPage extends StatefulWidget {
+  const DriverRegisterPage({Key? key}) : super(key: key);
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _DriverRegisterPageState createState() => _DriverRegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  RegisterController _registerController = new RegisterController();
+class _DriverRegisterPageState extends State<DriverRegisterPage> {
+  DriverRegisterController _registerController = new DriverRegisterController();
 
   @override
   void initState() {
@@ -35,6 +36,18 @@ class _RegisterPageState extends State<RegisterPage> {
           children: [
             _bannerApp(),
             _textTitle(),
+            _textLicencePlate(),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 25),
+              child: OTPFields(
+                pin1: _registerController.pin1Controller,
+                pin2: _registerController.pin2Controller,
+                pin3: _registerController.pin3Controller,
+                pin4: _registerController.pin4Controller,
+                pin5: _registerController.pin5Controller,
+                pin6: _registerController.pin6Controller,
+              ),
+            ),
             _textFieldUsername(),
             _textFieldEmail(),
             _textFieldPassword(),
@@ -44,6 +57,19 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     );
+  }
+
+  Widget _textLicencePlate() {
+    return Container(
+        alignment: Alignment.centerLeft,
+        margin: EdgeInsets.symmetric(horizontal: 30),
+        child: Text(
+          'Placa del vehículo',
+          style: TextStyle(
+            color: Colors.grey[600],
+            fontSize: 17.0,
+          ),
+        ));
   }
 
   Widget _registerButton() {

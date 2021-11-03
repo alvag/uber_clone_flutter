@@ -6,7 +6,7 @@ import 'package:uber_clone/src/providers/client_provider.dart';
 import 'package:uber_clone/src/utils/custom_progress_dialog.dart';
 import 'package:uber_clone/src/utils/custom_snackbar.dart';
 
-class RegisterController {
+class ClientRegisterController {
   late BuildContext context;
   GlobalKey<ScaffoldState> key = new GlobalKey<ScaffoldState>();
 
@@ -58,7 +58,7 @@ class RegisterController {
       this.usernameController.clear();
       this.pwdController.clear();
       this.pwdConfirmController.clear();
-      CustomSnackBar.show(context, key, 'Usuario registrado');
+      Navigator.pushNamedAndRemoveUntil(context, 'client/map', (route) => false);
     } catch (error) {
       _progressDialog.hide();
       CustomSnackBar.show(context, key, 'Error: $error');

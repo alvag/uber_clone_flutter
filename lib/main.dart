@@ -1,8 +1,11 @@
 // @dart=2.9
 import 'package:flutter/material.dart';
+import 'package:uber_clone/src/pages/client/map/client_map_page.dart';
+import 'package:uber_clone/src/pages/client/register/client_register_page.dart';
+import 'package:uber_clone/src/pages/driver/map/driver_map_page.dart';
+import 'package:uber_clone/src/pages/driver/register/driver_register_page.dart';
 import 'package:uber_clone/src/pages/home/home_page.dart';
 import 'package:uber_clone/src/pages/login/login_page.dart';
-import 'package:uber_clone/src/pages/register/register_page.dart';
 import 'package:uber_clone/src/utils/custom_colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -37,7 +40,10 @@ class _MyAppState extends State<MyApp> {
       routes: {
         'home': (BuildContext context) => HomePage(),
         'login': (BuildContext context) => LoginPage(),
-        'register': (BuildContext context) => RegisterPage()
+        'client/register': (BuildContext context) => ClientRegisterPage(),
+        'client/map': (BuildContext context) => ClientMapPage(),
+        'driver/register': (BuildContext context) => DriverRegisterPage(),
+        'driver/map': (BuildContext context) => DriverMapPage(),
       },
     );
   }
