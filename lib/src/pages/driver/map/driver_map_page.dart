@@ -104,7 +104,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
               children: [
                 Container(
                   child: Text(
-                    'Nombre de usuario',
+                    _driverMapController.driver?.username ?? '',
                     style: TextStyle(
                       fontSize: 18.0,
                       color: Colors.black,
@@ -115,7 +115,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
                 ),
                 Container(
                   child: Text(
-                    'Email',
+                    _driverMapController.driver?.email ?? '',
                     style: TextStyle(
                       fontSize: 14.0,
                       color: Colors.grey[800],

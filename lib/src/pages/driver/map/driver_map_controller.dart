@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -6,7 +7,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart' as location;
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:uber_clone/src/models/driver.dart';
 import 'package:uber_clone/src/providers/auth_provider.dart';
+import 'package:uber_clone/src/providers/driver_provider.dart';
 import 'package:uber_clone/src/providers/geofire_provider.dart';
 import 'package:uber_clone/src/utils/custom_progress_dialog.dart';
 import 'package:uber_clone/src/utils/custom_snackbar.dart';
@@ -15,30 +18,24 @@ class DriverMapController {
   late BuildContext context;
   late Function _refresh;
   GlobalKey<ScaffoldState> key = new GlobalKey<ScaffoldState>();
-
   CameraPosition initialPosition = new CameraPosition(
     target: LatLng(-12.1513335, -77.0143298),
     zoom: 16.0,
   );
-
   Position? _position;
   late StreamSubscription<Position> _positionStream;
-
   late BitmapDescriptor _markerDriver;
-
   late GeofireProvider _geofireProvider;
-
   late AuthProvider _authProvider;
-
   bool isConnected = false;
-
   late ProgressDialog _progressDialog;
-
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-
   Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
-
   late StreamSubscription<DocumentSnapshot<Object?>> _statusSubscription;
+  late DriverProvider _driverProvider;
+  Driver? driver;
+
+  late StreamSubscription<DocumentSnapshot<Object?>> _driverSubscription;
 
   Future? init(BuildContext context, Function refresh) async {
     this.context = context;
@@ -47,16 +44,27 @@ class DriverMapController {
     _authProvider = new AuthProvider();
     _progressDialog = CustomProgressDialog.createProgressDialog(context, 'Conectandose...');
     _markerDriver = await createMarkerImageFromAsset('assets/img/taxi_icon.png');
+    _driverProvider = new DriverProvider();
     checkGPS();
+    getDriverInfo();
   }
 
   void dispose() {
     _positionStream.cancel();
     _statusSubscription.cancel();
+    _driverSubscription.cancel();
   }
 
   void openDrawer() {
     key.currentState!.openDrawer();
+  }
+
+  void getDriverInfo() {
+    Stream<DocumentSnapshot> stream = _driverProvider.getByIdStream(_authProvider.getUser()!.uid);
+    _driverSubscription = stream.listen((DocumentSnapshot document) {
+      driver = driverFromJson(json.encode(document.data()));
+      _refresh();
+    });
   }
 
   void onMapCreated(GoogleMapController controller) {

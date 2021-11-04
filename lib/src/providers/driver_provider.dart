@@ -6,6 +6,10 @@ import 'package:uber_clone/src/models/driver.dart';
 class DriverProvider {
   late CollectionReference _ref;
 
+  Stream<DocumentSnapshot> getByIdStream(String id) {
+    return _ref.doc(id).snapshots(includeMetadataChanges: true);
+  }
+
   DriverProvider() {
     _ref = FirebaseFirestore.instance.collection('Drivers');
   }
