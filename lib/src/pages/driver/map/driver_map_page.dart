@@ -36,6 +36,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _driverMapController.key,
+      drawer: _drawer(),
       body: Stack(
         children: [
           _googleMaps(),
@@ -60,17 +61,20 @@ class _DriverMapPageState extends State<DriverMapPage> {
   }
 
   Widget _buttonCenterPosition() {
-    return Container(
-      margin: EdgeInsets.only(right: 10.0),
-      child: Card(
-        elevation: 4.0,
-        shape: CircleBorder(),
-        child: Container(
-          padding: EdgeInsets.all(5.0),
-          child: Icon(
-            Icons.location_searching,
-            color: Colors.grey[600],
-            size: 20.0,
+    return GestureDetector(
+      onTap: _driverMapController.centerPosition,
+      child: Container(
+        margin: EdgeInsets.only(right: 10.0),
+        child: Card(
+          elevation: 4.0,
+          shape: CircleBorder(),
+          child: Container(
+            padding: EdgeInsets.all(5.0),
+            child: Icon(
+              Icons.location_searching,
+              color: Colors.grey[600],
+              size: 20.0,
+            ),
           ),
         ),
       ),
@@ -80,11 +84,67 @@ class _DriverMapPageState extends State<DriverMapPage> {
   Widget _menuDrawer() {
     return Container(
       child: IconButton(
-        onPressed: () {},
+        onPressed: _driverMapController.openDrawer,
         icon: Icon(
           Icons.menu,
           color: Colors.white,
         ),
+      ),
+    );
+  }
+
+  Widget _drawer() {
+    return Drawer(
+      child: ListView(
+        children: [
+          DrawerHeader(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child: Text(
+                    'Nombre de usuario',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                  ),
+                ),
+                Container(
+                  child: Text(
+                    'Email',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.grey[800],
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                CircleAvatar(backgroundImage: AssetImage('assets/img/profile.jpg'), radius: 40.0),
+              ],
+            ),
+            decoration: BoxDecoration(
+              color: Colors.amber,
+            ),
+          ),
+          ListTile(
+            title: Text('Editar perfil'),
+            trailing: Icon(Icons.edit),
+            // leading: Icon(Icons.cancel),
+            onTap: () {},
+          ),
+          ListTile(
+            title: Text('Cerrar sesión'),
+            trailing: Icon(Icons.power_settings_new),
+            // leading: Icon(Icons.cancel),
+            onTap: () {},
+          ),
+        ],
       ),
     );
   }
