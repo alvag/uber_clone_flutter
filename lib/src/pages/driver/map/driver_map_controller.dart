@@ -227,4 +227,9 @@ class DriverMapController {
 
     markers[id] = marker;
   }
+
+  void signOut() async {
+    await _authProvider.logOut();
+    Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
+  }
 }

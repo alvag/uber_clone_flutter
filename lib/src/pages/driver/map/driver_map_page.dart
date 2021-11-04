@@ -142,7 +142,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
             title: Text('Cerrar sesión'),
             trailing: Icon(Icons.power_settings_new),
             // leading: Icon(Icons.cancel),
-            onTap: () {},
+            onTap: _driverMapController.signOut,
           ),
         ],
       ),
