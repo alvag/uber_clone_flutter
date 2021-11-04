@@ -6,6 +6,10 @@ import 'package:uber_clone/src/models/client.dart';
 class ClientProvider {
   late CollectionReference _ref;
 
+  Stream<DocumentSnapshot> getByIdStream(String id) {
+    return _ref.doc(id).snapshots(includeMetadataChanges: true);
+  }
+
   ClientProvider() {
     _ref = FirebaseFirestore.instance.collection('Clients');
   }
