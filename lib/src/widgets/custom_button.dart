@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:uber_clone/src/utils/custom_colors.dart';
 
 class CustomButton extends StatelessWidget {
-  Color btnColor;
-  final Color textColor;
+  final Color? btnColor;
+  final Color? textColor;
   final String text;
-  final IconData icon;
+  final IconData? icon;
   final Function onPressed;
 
   CustomButton({
