@@ -55,6 +55,10 @@ class _ClientMapPageState extends State<ClientMapPage> {
               ],
             ),
           ),
+          Align(
+            alignment: Alignment.center,
+            child: _iconMyLocation(),
+          ),
         ],
       ),
     );
@@ -90,6 +94,14 @@ class _ClientMapPageState extends State<ClientMapPage> {
           color: Colors.white,
         ),
       ),
+    );
+  }
+
+  Widget _iconMyLocation() {
+    return Image.asset(
+      'assets/img/my_location.png',
+      width: 65,
+      height: 65,
     );
   }
 

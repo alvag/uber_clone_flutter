@@ -24,7 +24,7 @@ class ClientMapController {
   );
   Position? _position;
   late StreamSubscription<Position> _positionStream;
-  late BitmapDescriptor _markerClient;
+  late BitmapDescriptor _markerDriver;
   late GeofireProvider _geofireProvider;
   late AuthProvider _authProvider;
   bool isConnected = false;
@@ -43,7 +43,7 @@ class ClientMapController {
     _geofireProvider = new GeofireProvider();
     _authProvider = new AuthProvider();
     _progressDialog = CustomProgressDialog.createProgressDialog(context, 'Conectandose...');
-    _markerClient = await createMarkerImageFromAsset('assets/img/taxi_icon.png');
+    _markerDriver = await createMarkerImageFromAsset('assets/img/taxi_icon.png');
     _clientProvider = new ClientProvider();
     checkGPS();
     getClientInfo();
@@ -91,22 +91,47 @@ class ClientMapController {
       await _determinePosition();
       _position = await Geolocator.getLastKnownPosition();
       centerPosition();
-      _addMarker('client', _position!.latitude, _position!.longitude, 'Tu posición', '', _markerClient);
-
-      _refresh();
-
-      _positionStream = Geolocator.getPositionStream(
-        desiredAccuracy: LocationAccuracy.best,
-        distanceFilter: 1,
-      ).listen((position) {
-        _position = position;
-        _addMarker('client', _position!.latitude, _position!.longitude, 'Tu posición', '', _markerClient);
-        _animateCameraToPosition(position.latitude, position.longitude);
-        _refresh();
-      });
+      getNearbyDrivers();
     } catch (error) {
       print('Error al obtener ubicación: $error');
     }
+  }
+
+  void getNearbyDrivers() {
+    Stream<List<DocumentSnapshot>> stream = _geofireProvider.getNearbyDrivers(_position!.latitude, _position!.longitude, 10);
+
+    stream.listen((List<DocumentSnapshot> documentList) {
+      for (MarkerId m in markers.keys) {
+        bool remove = true;
+
+        for (DocumentSnapshot d in documentList) {
+          if (m.value == d.id) {
+            remove = false;
+          }
+        }
+
+        if (remove) {
+          markers.remove(m);
+          _refresh();
+        }
+      }
+
+      for (DocumentSnapshot d in documentList) {
+        Map<String, dynamic> position = d.get('position');
+        GeoPoint point = position['geopoint'];
+
+        _addMarker(
+          d.id,
+          point.latitude,
+          point.longitude,
+          'Conductor disponible',
+          d.id,
+          _markerDriver,
+        );
+      }
+
+      _refresh();
+    });
   }
 
   void centerPosition() {
